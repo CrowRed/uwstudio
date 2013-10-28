@@ -64,6 +64,11 @@ inlineEditPost = {
 				t.revert();
 			}
 		});
+
+		$('#post-query-submit').mousedown(function(e){
+			t.revert();
+			$('select[name^="action"]').val('-1');
+		});
 	},
 
 	toggle : function(el){
@@ -252,10 +257,6 @@ inlineEditPost = {
 					}
 				} else {
 					$('#edit-'+id+' .inline-edit-save .error').html(inlineEditL10n.error).show();
-				}
-
-				if ( $('#post-'+id).prev().hasClass('alternate') ) {
-					$('#post-'+id).removeClass('alternate');
 				}
 			}
 		, 'html');

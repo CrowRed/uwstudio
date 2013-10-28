@@ -36,7 +36,7 @@
 			$.extend( this, options || {} );
 
 			this.id = id;
-			this.selector = '#customize-control-' + id.replace( /\]/g, '' ).replace( /\[/g, '-' );
+			this.selector = '#customize-control-' + id.replace( ']', '' ).replace( '[', '-' );
 			this.container = $( this.selector );
 
 			settings = $.map( this.params.settings, function( value ) {
@@ -553,19 +553,14 @@
 
 				// Check for URLs that include "/wp-admin/" or end in "/wp-admin".
 				// Strip hashes and query strings before testing.
-				if ( /\/wp-admin(\/|$)/.test( to.replace( /[#?].*$/, '' ) ) )
+				if ( /\/wp-admin(\/|$)/.test( to.replace(/[#?].*$/, '') ) )
 					return null;
 
 				// Attempt to match the URL to the control frame's scheme
 				// and check if it's allowed. If not, try the original URL.
 				$.each([ to.replace( rscheme, self.scheme() ), to ], function( i, url ) {
 					$.each( self.allowedUrls, function( i, allowed ) {
-						var path;
-
-						allowed = allowed.replace( /\/+$/, '' );
-						path = url.replace( allowed, '' );
-
-						if ( 0 === url.indexOf( allowed ) && /^([/#?]|$)/.test( path ) ) {
+						if ( 0 === url.indexOf( allowed ) ) {
 							result = url;
 							return false;
 						}
@@ -867,7 +862,7 @@
 			if ( 9 === event.which ) // tab
 				return;
 			if ( 13 === event.which ) // enter
-				this.click();
+				parent.send( 'close' );
 			event.preventDefault();
 		});
 

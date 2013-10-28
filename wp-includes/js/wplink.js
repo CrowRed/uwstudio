@@ -121,6 +121,8 @@ var wpLink;
 			} else {
 				wpLink.setDefaultValues();
 			}
+
+			tinyMCEPopup.storeSelection();
 		},
 
 		close : function() {
@@ -224,6 +226,7 @@ var wpLink;
 			// If the values are empty, unlink and return
 			if ( ! attrs.href || attrs.href == 'http://' ) {
 				if ( e ) {
+					tinyMCEPopup.execCommand("mceBeginUndoLevel");
 					b = ed.selection.getBookmark();
 					ed.dom.remove(e, 1);
 					ed.selection.moveToBookmark(b);
@@ -232,6 +235,8 @@ var wpLink;
 				}
 				return;
 			}
+
+			tinyMCEPopup.execCommand("mceBeginUndoLevel");
 
 			if (e == null) {
 				ed.getDoc().execCommand("unlink", false, null);
@@ -247,7 +252,7 @@ var wpLink;
 				// Sometimes WebKit lets a user create a link where
 				// they shouldn't be able to. In this case, CreateLink
 				// injects "#mce_temp_url#" into their content. Fix it.
-				if ( tinymce.isWebKit && $(e).text() == '#mce_temp_url#' ) {
+				if ( $(e).text() == '#mce_temp_url#' ) {
 					ed.dom.remove(e);
 					e = null;
 				}
@@ -255,16 +260,16 @@ var wpLink;
 				ed.dom.setAttribs(e, attrs);
 			}
 
-			// Move the caret if selection was not an image.
+			// Don't move caret if selection was image
 			if ( e && (e.childNodes.length != 1 || e.firstChild.nodeName != 'IMG') ) {
+				ed.focus();
 				ed.selection.select(e);
 				ed.selection.collapse(0);
 				tinyMCEPopup.storeSelection();
 			}
 
-			ed.execCommand("mceEndUndoLevel");
+			tinyMCEPopup.execCommand("mceEndUndoLevel");
 			wpLink.close();
-			ed.focus();
 		},
 
 		updateFields : function( e, li, originalEvent ) {
